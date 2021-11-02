@@ -10,8 +10,6 @@ from scrapy.pipelines.images import ImagesPipeline
 
 
 class WzryPipeline(ImagesPipeline):
-    def open_spider(self, spider):
-        print("开始爬虫")
 
     def get_media_requests(self, item, info):
         images = item['images']
@@ -24,6 +22,3 @@ class WzryPipeline(ImagesPipeline):
 
     def item_completed(self, results, item, info):
         return item
-
-    def close_spider(self, spider):
-        print('结束爬虫')

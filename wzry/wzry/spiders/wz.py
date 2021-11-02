@@ -1,3 +1,5 @@
+import json
+
 import scrapy
 
 from wzry.items import WzryItem
@@ -5,7 +7,8 @@ from wzry.items import WzryItem
 
 class WzSpider(scrapy.Spider):
     name = 'wz'
-    start_urls = ['https://pvp.qq.com/web201605/herolist.shtml']
+    # start_urls = ['https://pvp.qq.com/web201605/herolist.shtml']
+    start_urls = ['https://pvp.qq.com/web201605/js/herolist.json']
 
     def parse_hero_deatil(self, response):
         item = WzryItem()
@@ -21,7 +24,15 @@ class WzSpider(scrapy.Spider):
         yield item
 
     def parse(self, response, **kwargs):
-        hero_list = response.xpath("//ul[@class='herolist clearfix']/li/a/@href").getall()
-        print(f'英雄个数{len(hero_list)}')
-        for hero_url in hero_list:
-            yield scrapy.Request(response.urljoin(hero_url), callback=self.parse_hero_deatil)
+        heros = json.loads(response.text)
+        print("开始爬虫……")
+        print("英雄数量：", len(heros))
+        template = 'herodetail/{}.shtml'
+        base_url = 'https://pvp.qq.com/web201605/'
+        test = heros[1:3]
+        for item in test:
+            yield scrapy.Request(base_url + template.format(item['ename']), callback=self.parse_hero_deatil)
+
+    @staticmethod
+    def close(spider, reason):
+        print("爬虫完成")
