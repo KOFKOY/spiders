@@ -13,6 +13,6 @@ def run_spider(name: str):
 
 
 if __name__ == '__main__':
-    run_spider("stv")
+    run_spider("bli")
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
